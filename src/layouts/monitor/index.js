@@ -28,13 +28,12 @@ import Footer from "examples/Footer";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import schedulersTableData from "layouts/tables/data/schedulersTableData";
-import projectsTableData from "layouts/tables/data/projectsTableData";
+import logsTableData from "layouts/monitor/data/logsTableData";
 import MultipleSelectCheckmarks from 'examples/Items/SelectItem';
 
-function Tables() {
-  const { columns, rows } = schedulersTableData();
-  const { columns: pColumns, rows: pRows } = projectsTableData();
+function Monitor() {
+  const { columns, rows } = logsTableData();
+  // const { columns: pColumns, rows: pRows } = projectsTableData();
 
   return (
     <DashboardLayout>
@@ -53,10 +52,14 @@ function Tables() {
                 borderRadius="lg"
                 coloredShadow="info"
               >
-                <MDTypography variant="h6" color="white">
-                  Logs Table
-                </MDTypography>
-                <MultipleSelectCheckmarks />
+                <MDBox display="flex" justifyContent="space-between" alignItems="center" >
+                  <MDTypography variant="h6" color="white">
+                    Logs Table
+                  </MDTypography>
+                  <MDBox>
+                    <MultipleSelectCheckmarks />
+                  </MDBox>
+                </MDBox>
               </MDBox>
               <MDBox pt={3}>
                 <DataTable
@@ -76,4 +79,4 @@ function Tables() {
   );
 }
 
-export default Tables;
+export default Monitor;

@@ -30,10 +30,10 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import MDButton from '../../../../components/MDButton/index'
-import authorsTableData from "layouts/tables/data/authorsTableData";
+import schedulersTableData from "layouts/tables/data/schedulersTableData";
 
 function Crons() {
-  const { columns, rows } = authorsTableData();
+  const { columns, rows } = schedulersTableData();
   const [menu, setMenu] = useState(null);
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);

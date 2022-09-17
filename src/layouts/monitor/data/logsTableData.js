@@ -40,8 +40,8 @@ export default function data() {
     </MDBox>
   );
 
-  const Job = ({ title, description }) => (
-    <MDBox lineHeight={1} textAlign="left">
+  const Time = ({ title, description, isCentered = true }) => (
+    <MDBox lineHeight={1} textAlign={isCentered ? "center" : "left"}>
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
         {title}
       </MDTypography>
@@ -51,64 +51,92 @@ export default function data() {
 
   return {
     columns: [
-      { Header: "api", accessor: "api", width: "45%", align: "left" },
+      { Header: "api", accessor: "api", width: "30%", align: "left" },
       { Header: "request type", accessor: "requestType", align: "left" },
-      { Header: "status", accessor: "status", align: "center" },
-      { Header: "body", accessor: "body", align: "center" },
-      { Header: "actions", accessor: "action", align: "center" },
+      { Header: "response status", accessor: "status", align: "center" },
+      { Header: "retry count", accessor: "retryCount", align: "center" },
+      { Header: "request time", accessor: "requestTime", align: "center" },
+      { Header: "response time", accessor: "responseTime", align: "center" },
+      { Header: "total time", accessor: "totalTime", align: "center" },
     ],
 
     rows: [
       {
         api: <Author image={team2} name="Postman Post" email="https://postman-echo.com/post?cron=1sec" />,
-        requestType: <Job title="Post" description="Every Second" />,
+        requestType: <Time isCentered={false} title="Post" description="Every Second" />,
         status: (
           <MDBox ml={-1}>
-            <MDBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+            <MDBadge badgeContent="200" color="success" variant="gradient" size="sm" />
           </MDBox>
         ),
-        body: (
+        retryCount: (
           <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            {"{cron:1}"}
+            0
           </MDTypography>
         ),
-        action: (
+        requestTime: (
+          <Time title=" September 14, 2022" description="13:55:11" />
+        ),
+        responseTime: (
+          <Time title=" September 14, 2022" description="13:55:13" />
+        ),
+        totalTime: (
           <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            <Icon>edit</Icon>
-            <Icon>delete</Icon>
+            2 S
           </MDTypography>
         ),
       },
       {
-        api: <Author image={team3} name="Postman Get" email="https://postman-echo.com/get?cron=1sec" />,
-        requestType: <Job title="Get" description="Every Hour" />,
+        api: <Author image={team2} name="Postman Post" email="https://postman-echo.com/post?cron=1sec" />,
+        requestType: <Time isCentered={false} title="Post" description="Every Second" />,
         status: (
           <MDBox ml={-1}>
-            <MDBadge badgeContent="Inactive" color="dark" variant="gradient" size="sm" />
+            <MDBadge badgeContent="400" color="error" variant="gradient" size="sm" />
           </MDBox>
         ),
-        action: (
+        retryCount: (
           <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            <Icon>edit</Icon>
-            <Icon>delete</Icon>
+            3
+          </MDTypography>
+        ),
+        requestTime: (
+          <Time title=" September 14, 2022" description="13:55:11" />
+        ),
+        responseTime: (
+          <Time title=" September 14, 2022" description="13:56:10" />
+        ),
+        totalTime: (
+          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+            60 S
           </MDTypography>
         ),
       },
       {
-        api: <Author image={team4} name="Google Ping" email="http://www.google.com" />,
-        requestType: <Job title="Get" description="Every Minute" />,
+        api: <Author image={team2} name="Postman Post" email="https://postman-echo.com/post?cron=1sec" />,
+        requestType: <Time isCentered={false} title="Post" description="Every Second" />,
         status: (
           <MDBox ml={-1}>
-            <MDBadge badgeContent="Active" color="success" variant="gradient" size="sm" />
+            <MDBadge badgeContent="200" color="success" variant="gradient" size="sm" />
           </MDBox>
         ),
-        action: (
+        retryCount: (
           <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-            <Icon>edit</Icon>
-            <Icon>delete</Icon>
+            0
+          </MDTypography>
+        ),
+        requestTime: (
+          <Time title=" September 14, 2022" description="13:55:11" />
+        ),
+        responseTime: (
+          <Time title=" September 14, 2022" description="13:55:13" />
+        ),
+        totalTime: (
+          <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+            2 S
           </MDTypography>
         ),
       },
+
     ],
   };
 }
