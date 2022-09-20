@@ -63,12 +63,16 @@ export default function MultipleSelectCheckmarks({ name }) {
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Logs</InputLabel>
+    // <div>
+    <FormControl sx={{ width: 300, }}>
+      <InputLabel  >
+        <MDTypography variant="h6" color="white" >
+          Logs
+        </MDTypography></InputLabel>
         <Select
           labelId="demo-multiple-checkbox-label"
           id="demo-multiple-checkbox"
+        sx={{ m: 1, height: 40, }}
           multiple
           value={personName}
           onChange={handleChange}
@@ -84,6 +88,6 @@ export default function MultipleSelectCheckmarks({ name }) {
           ))}
         </Select>
       </FormControl>
-    </div>
+    // </div>
   );
 }
