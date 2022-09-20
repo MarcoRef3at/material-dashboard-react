@@ -32,8 +32,10 @@ import MDTypography from "components/MDTypography";
 
 // ReportsBarChart configurations
 import configs from "examples/Charts/BarCharts/ReportsBarChart/configs";
+import MDBadge from 'components/MDBadge'
+import MDButton from 'components/MDButton';
 
-function ReportsBarChart({ color, title, description, date, chart }) {
+function ReportsBarChart({ color, title, description, date, chart, headerTitle, badgeColor = "success" }) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
   return (
@@ -51,7 +53,11 @@ function ReportsBarChart({ color, title, description, date, chart }) {
               mt={-5}
               height="12.5rem"
             >
-              <Bar data={data} options={options} />
+
+              <MDBadge badgeContent="Developer" color={badgeColor} variant="gradient" size="sm" />
+              <MDTypography variant="h1" fontWeight="medium" color="white" align="center">
+                {headerTitle}
+              </MDTypography>
             </MDBox>
           ),
           [chart, color]
@@ -64,13 +70,10 @@ function ReportsBarChart({ color, title, description, date, chart }) {
             {description}
           </MDTypography>
           <Divider />
-          <MDBox display="flex" alignItems="center">
-            <MDTypography variant="button" color="text" lineHeight={1} sx={{ mt: 0.15, mr: 0.5 }}>
-              <Icon>schedule</Icon>
-            </MDTypography>
-            <MDTypography variant="button" color="text" fontWeight="light">
-              {date}
-            </MDTypography>
+          <MDBox display="flex" alignItems="center" align="center">
+            <MDButton variant="gradient" color={color} align="center">
+              GET STARTED
+            </MDButton>
           </MDBox>
         </MDBox>
       </MDBox>

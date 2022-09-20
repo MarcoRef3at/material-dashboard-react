@@ -73,7 +73,7 @@ const routes = [
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
-    // component: <Billing />,
+    component: <Dashboard />,
   },
   // {
   //   type: "collapse",
