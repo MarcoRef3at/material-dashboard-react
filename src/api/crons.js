@@ -16,14 +16,22 @@ const createCron = (name, api, requestType, cronTime, body, headers) => {
     ...(headers && { headers }),
     ...(body && { body })
   });
-
-
-
   return client.post(endPoints.crons, rqbody);
+};
+
+const updateCron = (uuid, name, api, requestType, cronTime, body, headers) => {
+  console.log('uuid:', uuid)
+  let rqbody = ({
+    name, api, requestType, cronTime,
+    ...(headers && { headers }),
+    ...(body && { body })
+  });
+  return client.patch(`${endPoints.crons}/${uuid}`, rqbody);
 };
 
 export {
   getCrons,
   deleteCron,
-  createCron
+  createCron,
+  updateCron
 };

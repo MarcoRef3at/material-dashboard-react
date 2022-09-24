@@ -20,52 +20,149 @@ import MDModal from 'examples/Modal';
 
 import Typography from '@mui/material/Typography';
 import AddEditModal from './AddEditModal';
-import { getCrons, deleteCron, createCron } from 'api/crons'
+import { getCrons, deleteCron, createCron, updateCron } from 'api/crons'
 import MDBadge from 'components/MDBadge'
 
-import cronTime from "cron-time-generator";
+import cron from "cron-time-generator";
+import MDSnackbar from 'components/MDSnackbar'
 
 function Crons() {
   let { columns } = schedulersTableData();
   const [rows, setRows] = useState([])
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState(null)
-  const [api, setApi] = useState(null)
+  const [action, setAction] = useState('add')
+  const [uuid, setUuid] = useState("")
+  const [name, setName] = useState("")
+  const [api, setApi] = useState("")
   const [requestType, setRequestType] = useState('get')
-  const [body, setBody] = useState(null)
-  const [headers, setHeaders] = useState(null)
+  const [body, setBody] = useState("")
+  const [headers, setHeaders] = useState("")
   const [count, setCount] = useState(1)
   const [interval, setInterval] = useState('seconds')
+  const [errorSB, setErrorSB] = useState(false);
+  const [error, setError] = useState("")
+  const openErrorSB = (e) => {
+    setError(e)
+    setErrorSB(true)
+  };
+  const closeErrorSB = () => {
+    setError("")
+    setErrorSB(false)
+  };
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setUuid("")
+    setName("")
+    setApi("")
+    setRequestType("get")
+    setBody("")
+    setHeaders("")
+    setCount(1)
+    setInterval("seconds")
+    setErrorSB(false)
+    setOpen(false)
+  };
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Error"
+      content={error}
+      dateTime="11 mins ago"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
+
+  const setTable = () => {
+    getCrons().then(crons => {
+      let data = []
+      console.log('crons:', crons.data)
+      crons.data.Items.map(cron => {
+        let row =
+        {
+          api: <Author name={cron.name} email={cron.api} />,
+          requestType: <Job title={cron.requestType} description="Every Second" />,
+          status: (
+            <MDBox ml={-1}>
+              <MDBadge badgeContent="active" color="success" variant="gradient" size="sm" />
+            </MDBox>
+          ),
+          body: (
+            <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+              {JSON.stringify(cron.body)}
+            </MDTypography>
+          ),
+          action: (
+            <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
+              <Icon fontSize='medium' onClick={() => editCron(cron.uuid, cron.name, cron.api, cron.requestType, cron.body, cron.headers, cron.cronTime)}>edit</Icon>
+              <Icon color="error" fontSize='medium' onClick={() => removeCron(cron.uuid)}>delete</Icon>
+            </MDTypography>
+          ),
+        }
+        data.push(row)
+      })
+      setRows(data)
+    })
+  }
+
   const handleSave = async () => {
     try {
       let cronTime
-      if (interval == 'second') {
+      if (interval === 'seconds') {
         cronTime = `*/${count} * * * * *`
-      } else if (interval == 'minutes') {
-        cronTime = cronTime.every(count).minutes()
-      } else if (interval == 'hours') {
-        cronTime = cronTime.every(count).hours()
-      } else if (interval == 'days') {
-        cronTime = cronTime.every(count).days()
+      } else if (interval === 'minutes') {
+        console.log('count:', count)
+        cronTime = cron.every(count).minutes()
+      } else if (interval === 'hours') {
+        cronTime = cron.every(count).hours()
+      } else if (interval === 'days') {
+        cronTime = cron.every(count).days()
       }
+      if (action === 'add') {
 
-      await createCron(name, api, requestType, cronTime, body, headers)
-
-      // setOpen(false)
+        await createCron(name, api, requestType, cronTime, body, headers)
+      } else if (action === 'edit') {
+        await updateCron(uuid, name, api, requestType, cronTime, body, headers)
+      }
+      setTable()
+      handleClose()
     } catch (error) {
-      console.log('save error:', error)
+      console.log('save error:', error.message)
+      openErrorSB(error.response.data?.error)
     }
 
   };
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
   const closeMenu = () => setMenu(null);
+  const editCron = async (uuid, name, api, requestType, body, headers) => {
+    try {
+      setAction('edit')
+      setUuid(uuid)
+      setName(name)
+      setApi(api)
+      setRequestType(requestType)
+      setBody(body)
+      setHeaders(headers)
+      // TODO: handle inverted cron generation
+      // setCount(1)
+      // setInterval("seconds")
+      setOpen(true)
+      // await deleteCron(uuid)
+      // setTable()
+    } catch (error) {
+      console.log('Delete Cron error:', error)
+    }
+  }
   const removeCron = async (uuid) => {
     try {
       await deleteCron(uuid)
+      setTable()
     } catch (error) {
       console.log('Delete Cron error:', error)
     }
@@ -92,45 +189,19 @@ function Crons() {
     </MDBox>
   );
 
-  const setTable = () => {
-    getCrons().then(crons => {
-      let data = []
-      console.log('crons:', crons.data)
-      crons.data.Items.map(cron => {
-        let row =
-        {
-          api: <Author name="Cron Name" email={cron.api} />,
-          requestType: <Job title={cron.requestType} description="Every Second" />,
-          status: (
-            <MDBox ml={-1}>
-              <MDBadge badgeContent="active" color="success" variant="gradient" size="sm" />
-            </MDBox>
-          ),
-          body: (
-            <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-              {JSON.stringify(cron.body)}
-            </MDTypography>
-          ),
-          action: (
-            <MDTypography component="a" href="#" variant="caption" color="text" fontWeight="medium">
-              <Icon fontSize='medium'>edit</Icon>
-              <Icon color="error" fontSize='medium' onClick={() => removeCron(cron.uuid)}>delete</Icon>
-            </MDTypography>
-          ),
-        }
-        data.push(row)
-      })
-      setRows(data)
-    })
-  }
+
+
+
   useEffect(() => {
     setTable()
   }, [])
 
   return (
     <Card>
+      {renderErrorSB}
       <MDModal open={open} handleClose={handleClose}>
         <AddEditModal
+          action={action}
           handleClose={handleClose}
           handleSave={handleSave}
           name={name}
@@ -165,7 +236,7 @@ function Crons() {
               done
             </Icon> */}
             <MDTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>3/5</strong> crons
+              &nbsp;<strong>{rows.length}/5</strong> crons
             </MDTypography>
           </MDBox>
         </MDBox>

@@ -8,7 +8,6 @@ import MDBadgeRoot from "components/MDBadge/MDBadgeRoot";
 
 const MDBadge = forwardRef(
   ({ color, variant, size, circular, indicator, border, container, children, ...rest }, ref) => {
-    console.log('rest:', rest)
     return (
     <MDBadgeRoot
         {...rest}

@@ -9,7 +9,11 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 const methods = ['Get', 'Post', 'Patch', 'Delete']
 const intervals = ['Seconds', 'Minutes', 'Hours', 'Days']
-export default function AddEditModal({ handleSave, handleClose, name,
+export default function AddEditModal({
+    action,
+    handleSave,
+    handleClose,
+    name,
     setName,
     api,
     setApi,
@@ -50,8 +54,13 @@ export default function AddEditModal({ handleSave, handleClose, name,
                         onChange={(e) => setApi(e.target.value)} />
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <MDInput type="number" label="Run every" value={count}
-                        onChange={(e) => setCount(e.target.value)} />
+                    <MDInput
+                        type="number"
+                        label="Run every"
+                        value={count}
+                        onChange={(e) => e.target.value ? e.target.value > 100 ? setCount(100) : setCount(e.target.value) : setCount(1)}
+                        InputProps={{ inputProps: { min: 1, max: 100 } }}
+                    />
                     <MDDropDown values={intervals} label="Interval" value={interval}
                         onChange={(e) => setInterval(e.target.value)} />
                 </MDBox>
@@ -79,7 +88,7 @@ export default function AddEditModal({ handleSave, handleClose, name,
                 </MDBox>
 
 
-                <MDBox mt={4} mb={1} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }} onClick={handleClose}>
+                <MDBox mt={4} mb={1} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
                     <MDButton variant="gradient" color="light" width="90%" onClick={handleClose}>
                         Cancel
                     </MDButton>

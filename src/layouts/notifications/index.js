@@ -97,17 +97,20 @@ function Notifications() {
   );
 
   const renderErrorSB = (
-    <MDSnackbar
-      color="error"
-      icon="warning"
-      title="Material Dashboard"
-      content="Hello, world! This is a notification message"
-      dateTime="11 mins ago"
-      open={errorSB}
-      onClose={closeErrorSB}
-      close={closeErrorSB}
-      bgWhite
-    />
+    <MDAlert color="error" dismissible>
+      {alertContent("error")}
+    </MDAlert>
+    // <MDSnackbar
+    //   color="error"
+    //   icon="warning"
+    //   title="Material Dashboard"
+    //   content="Hello, world! This is a notification message"
+    //   dateTime="11 mins ago"
+    //   open={errorSB}
+    //   onClose={closeErrorSB}
+    //   close={closeErrorSB}
+    //   bgWhite
+    // />
   );
 
   return (
