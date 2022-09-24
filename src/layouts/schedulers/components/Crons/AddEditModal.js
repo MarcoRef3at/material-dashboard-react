@@ -43,15 +43,17 @@ export default function AddEditModal({ handleSave, handleClose, name,
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>
                     <MDDropDown values={methods} label="Methods" value={requestType}
-                        onChange={(e) => {
-                            console.log('e.target:', e.target)
-                            setRequestType(e.target.value)
-                        }} />
-                    <MDInput label="Target HTTP URL" sx={{ flexGrow: 1 }} />
+                        onChange={(e) => setRequestType(e.target.value)}
+                    />
+                    <MDInput label="Target HTTP URL" sx={{ flexGrow: 1 }}
+                        value={api}
+                        onChange={(e) => setApi(e.target.value)} />
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <MDInput type="number" label="Run every" />
-                    <MDDropDown values={intervals} label="Interval" />
+                    <MDInput type="number" label="Run every" value={count}
+                        onChange={(e) => setCount(e.target.value)} />
+                    <MDDropDown values={intervals} label="Interval" value={interval}
+                        onChange={(e) => setInterval(e.target.value)} />
                 </MDBox>
 
                 <MDBox mt={4} mb={1} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -62,7 +64,8 @@ export default function AddEditModal({ handleSave, handleClose, name,
                         rows={4}
                         // defaultValue="Default Value"
                         variant="filled"
-                    />
+                        value={body}
+                        onChange={(e) => setBody(e.target.value)} />
                     <TextField
                         id="filled-multiline-static"
                         label="Headers"
@@ -70,7 +73,8 @@ export default function AddEditModal({ handleSave, handleClose, name,
                         rows={4}
                         // defaultValue="Default Value"
                         variant="filled"
-                    />
+                        value={headers}
+                        onChange={(e) => setHeaders(e.target.value)} />
 
                 </MDBox>
 
