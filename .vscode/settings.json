@@ -1,0 +1,6 @@
+{
+  "path-intellisense.mappings": {
+    "@app": "${workspaceRoot}/app",
+    "@internals": "${workspaceRoot}/internals"
+  }
+}
