@@ -9,7 +9,20 @@ import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
 const methods = ['Get', 'Post', 'Patch', 'Delete']
 const intervals = ['Seconds', 'Minutes', 'Hours', 'Days']
-export default function AddEditModal({ handleSave, handleClose }) {
+export default function AddEditModal({ handleSave, handleClose, name,
+    setName,
+    api,
+    setApi,
+    requestType,
+    setRequestType,
+    count,
+    setCount,
+    interval,
+    setInterval,
+    body,
+    setBody,
+    headers,
+    setHeaders }) {
     return (
         <MDBox pt={4} pb={3} px={3}>
             <MDTypography
@@ -21,10 +34,19 @@ export default function AddEditModal({ handleSave, handleClose }) {
             </MDTypography>
             <MDBox component="form" role="form">
                 <MDBox mb={2}>
-                    <MDInput label="Scheduler Name" fullWidth />
+                    <MDInput
+                        label="Scheduler Name"
+                        fullWidth
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                    />
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <MDDropDown values={methods} label="Methods" />
+                    <MDDropDown values={methods} label="Methods" value={requestType}
+                        onChange={(e) => {
+                            console.log('e.target:', e.target)
+                            setRequestType(e.target.value)
+                        }} />
                     <MDInput label="Target HTTP URL" sx={{ flexGrow: 1 }} />
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>

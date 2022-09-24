@@ -20,21 +20,45 @@ import MDModal from 'examples/Modal';
 
 import Typography from '@mui/material/Typography';
 import AddEditModal from './AddEditModal';
-import { getCrons, deleteCron } from 'api/crons'
+import { getCrons, deleteCron, createCron } from 'api/crons'
 import MDBadge from 'components/MDBadge'
+
+import cronTime from "cron-time-generator";
 
 function Crons() {
   let { columns } = schedulersTableData();
   const [rows, setRows] = useState([])
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false);
+  const [name, setName] = useState(null)
+  const [api, setApi] = useState(null)
+  const [requestType, setRequestType] = useState('get')
+  const [body, setBody] = useState(null)
+  const [headers, setHeaders] = useState(null)
+  const [count, setCount] = useState(1)
+  const [interval, setInterval] = useState('seconds')
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleSave = () => {
-    // TODO: handle saving
-    console.log('process.env.BASE_URL:', process.env.BASE_URL)
+  const handleSave = async () => {
+    try {
+      let cronTime
+      if (interval == 'second') {
+        cronTime = `*/${count} * * * * *`
+      } else if (interval == 'minutes') {
+        cronTime = cronTime.every(count).minutes()
+      } else if (interval == 'hours') {
+        cronTime = cronTime.every(count).hours()
+      } else if (interval == 'days') {
+        cronTime = cronTime.every(count).days()
+      }
 
-    setOpen(false)
+      await createCron(name, api, requestType, cronTime, body, headers)
+
+      // setOpen(false)
+    } catch (error) {
+      console.log('save error:', error)
+    }
+
   };
 
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
@@ -106,7 +130,24 @@ function Crons() {
   return (
     <Card>
       <MDModal open={open} handleClose={handleClose}>
-        <AddEditModal handleClose={handleClose} handleSave={handleSave} />
+        <AddEditModal
+          handleClose={handleClose}
+          handleSave={handleSave}
+          name={name}
+          setName={setName}
+          api={api}
+          setApi={setApi}
+          requestType={requestType}
+          setRequestType={setRequestType}
+          count={count}
+          setCount={setCount}
+          interval={interval}
+          setInterval={setInterval}
+          body={body}
+          setBody={setBody}
+          headers={headers}
+          setHeaders={setHeaders}
+        />
       </MDModal>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
         <MDBox>
