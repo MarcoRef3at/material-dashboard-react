@@ -35,7 +35,15 @@ import configs from "examples/Charts/BarCharts/ReportsBarChart/configs";
 import MDBadge from 'components/MDBadge'
 import MDButton from 'components/MDButton';
 
-function ReportsBarChart({ color, title, description, date, chart, headerTitle, badgeColor = "success" }) {
+function ReportsBarChart({ color,
+  type,
+  title,
+  handleClick,
+  description,
+  date,
+  chart,
+  headerTitle,
+  badgeColor = "success" }) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
 
   return (
@@ -54,7 +62,7 @@ function ReportsBarChart({ color, title, description, date, chart, headerTitle, 
               height="12.5rem"
             >
 
-              <MDBadge badgeContent="Developer" color={badgeColor} variant="gradient" size="sm" />
+              <MDBadge badgeContent={type} color={badgeColor} variant="gradient" size="sm" />
               <MDTypography variant="h1" fontWeight="medium" color="white" align="center">
                 {headerTitle}
               </MDTypography>
@@ -71,7 +79,7 @@ function ReportsBarChart({ color, title, description, date, chart, headerTitle, 
           </MDTypography>
           <Divider />
           <MDBox display="flex" alignItems="center" align="center">
-            <MDButton variant="gradient" color={color} align="center">
+            <MDButton variant="gradient" color={color} align="center" onClick={() => handleClick(1)}>
               GET STARTED
             </MDButton>
           </MDBox>

@@ -19,9 +19,22 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import MDTypography from "components/MDTypography";
-
+import { stripeRedirect } from 'api/stripe';
+// react-router components
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useRef, useEffect, useState, useMemo } from "react";
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const handleClick = async (id) => {
+    try {
+      let redirection = await stripeRedirect(id)
+      window.location.replace(redirection.data.redirect)
+
+
+    } catch (error) {
+      console.log('stripe error:', error)
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -36,19 +49,6 @@ function Dashboard() {
             <MDTypography variant="h6" fontWeight="medium" color="text" mt={1} align="center">
               All paid plans come with a 7-day free trial. Cancel anytime.
             </MDTypography>
-            {/*    <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>*/}
           </Grid>
         </Grid> 
         <MDBox mt={4.5}>
@@ -56,6 +56,7 @@ function Dashboard() {
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsBarChart
+                  type="Developer"
                   color="info"
                   title="You will get"
                   description={<>
@@ -63,6 +64,7 @@ function Dashboard() {
                   </>}
                   date="campaign sent 2 days ago"
                   headerTitle="$16/mo"
+                  handleClick={handleClick}
                   chart={reportsBarChartData}
                 />
 
@@ -70,18 +72,8 @@ function Dashboard() {
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
-                {/* <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                /> */}
                 <ReportsBarChart
+                  type="Startup"
                   color="success"
                   badgeColor="info"
                   title="You will get"
@@ -90,6 +82,7 @@ function Dashboard() {
                   </>}
                   date="campaign sent 2 days ago"
                   headerTitle="$49/mo"
+                  handleClick={handleClick}
                   chart={reportsBarChartData}
                 />
               </MDBox>
@@ -97,6 +90,7 @@ function Dashboard() {
             <Grid item xs={12} md={6} lg={4}>
               <MDBox mb={3}>
                 <ReportsBarChart
+                  type="Business"
                   color="dark"
                   title="You will get"
                   description={<>
@@ -104,6 +98,7 @@ function Dashboard() {
                   </>}
                   date="campaign sent 2 days ago"
                   headerTitle="$99/mo"
+                  handleClick={handleClick}
                   chart={reportsBarChartData}
                 />
               </MDBox>

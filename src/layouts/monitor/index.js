@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -30,10 +15,23 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import logsTableData from "layouts/monitor/data/logsTableData";
 import MultipleSelectCheckmarks from 'examples/Items/SelectItem';
+import { getLogs } from 'api/logs';
+import logsTableColumns from './data/logsTableColumns';
+import { useEffect, useState } from 'react'
 
 function Monitor() {
-  const { columns, rows } = logsTableData();
+  const { columns } = logsTableColumns();
+  const [rows, setRows] = useState([])
   // const { columns: pColumns, rows: pRows } = projectsTableData();
+
+
+  useEffect(() => {
+    logsTableData().then(data => {
+      console.log('useEffectdata:', data)
+      setRows(data)
+    })
+    console.log('rows:', rows)
+  }, [])
 
   return (
     <DashboardLayout>
@@ -64,9 +62,9 @@ function Monitor() {
               <MDBox pt={3}>
                 <DataTable
                   table={{ columns, rows }}
-                  isSorted={false}
-                  entriesPerPage={false}
-                  showTotalEntries={false}
+                  isSorted={true}
+                  entriesPerPage={2}
+                  showTotalEntries={true}
                   noEndBorder
                 />
               </MDBox>

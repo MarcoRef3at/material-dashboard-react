@@ -1,4 +1,4 @@
-import client from "./client";
+import client from "./index";
 import endPoints from "./endPoints";
 
 const login = (email, password) => {

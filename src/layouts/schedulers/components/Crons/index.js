@@ -50,7 +50,10 @@ function Crons() {
     setError("")
     setErrorSB(false)
   };
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setAction('add')
+    setOpen(true)
+  };
   const handleClose = () => {
     setUuid("")
     setName("")
@@ -124,7 +127,6 @@ function Crons() {
         cronTime = cron.every(count).days()
       }
       if (action === 'add') {
-
         await createCron(name, api, requestType, cronTime, body, headers)
       } else if (action === 'edit') {
         await updateCron(uuid, name, api, requestType, cronTime, body, headers)
@@ -132,8 +134,8 @@ function Crons() {
       setTable()
       handleClose()
     } catch (error) {
-      console.log('save error:', error.message)
-      openErrorSB(error.response.data?.error)
+      console.log('error:', error)
+      openErrorSB(error.response?.data ? error.response.data.error : error.message)
     }
 
   };
@@ -183,7 +185,7 @@ function Crons() {
   const Job = ({ title, description }) => (
     <MDBox lineHeight={1} textAlign="left">
       <MDTypography display="block" variant="caption" color="text" fontWeight="medium">
-        {title}
+        {title.toUpperCase()}
       </MDTypography>
       <MDTypography variant="caption">{description}</MDTypography>
     </MDBox>
@@ -251,7 +253,7 @@ function Crons() {
         <DataTable
           table={{ columns, rows }}
           showTotalEntries={false}
-          isSorted={false}
+          isSorted={true}
           noEndBorder
           entriesPerPage={false}
         />
