@@ -19,7 +19,7 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import Projects from "layouts/dashboard/components/Projects";
 import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import MDTypography from "components/MDTypography";
-import { stripeRedirect } from 'api/stripe';
+import { stripeRedirect } from 'api/payments';
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useRef, useEffect, useState, useMemo } from "react";

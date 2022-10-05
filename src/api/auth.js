@@ -18,6 +18,8 @@ const register = (email, password) => {
   return client.post(endPoints.register, body);
 };
 
+
+
 export default {
   login,
   register
