@@ -42,6 +42,8 @@ function Crons() {
   const [interval, setInterval] = useState('seconds')
   const [errorSB, setErrorSB] = useState(false);
   const [error, setError] = useState("")
+  const [cronLimit, setCronLimit] = useState(0)
+  const [cronUsed, setCronUsed] = useState(0)
   const openErrorSB = (e) => {
     setError(e)
     setErrorSB(true)
@@ -82,6 +84,8 @@ function Crons() {
   );
 
   const setTable = () => {
+    setCronLimit(localStorage.getItem('cronLimit'))
+    setCronUsed(localStorage.getItem('cronUsed'))
     getCrons().then(crons => {
       let data = []
       console.log('crons:', crons.data)
@@ -238,12 +242,12 @@ function Crons() {
               done
             </Icon> */}
             <MDTypography variant="button" fontWeight="regular" color="text">
-              &nbsp;<strong>{rows.length}/5</strong> crons
+              &nbsp;<strong>{cronUsed}/{cronLimit}</strong> crons
             </MDTypography>
           </MDBox>
         </MDBox>
         <MDBox color="text" px={2}>
-          <MDButton variant="gradient" color="dark" onClick={handleOpen}>
+          <MDButton variant="gradient" color="dark" onClick={handleOpen} disabled={!(cronLimit - cronUsed > 0)}>
             <Icon sx={{ fontWeight: "bold" }}>add</Icon>
             &nbsp;add new scheduler
           </MDButton>
