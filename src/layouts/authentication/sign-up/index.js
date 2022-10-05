@@ -29,8 +29,8 @@ function Cover() {
     try {
       let Register = await register(email, password)
       localStorage.setItem("TOKEN", Register.data.token);
-      localStorage.setItem("cronsLimit", 0);
-      localStorage.setItem("cronsUsed", 0);
+      localStorage.setItem("cronLimit", 0);
+      localStorage.setItem("cronUsed", 0);
       navigate("/schedulers", { replace: true })
     } catch (error) {
       // TODO: handle errors
