@@ -1,5 +1,13 @@
-import client from "./index";
 import endPoints from "./endPoints";
+import axios from 'axios'
+
+const client = axios.create({
+  baseURL: 'http://localhost:3000',
+  // baseURL: process.env.BASE_URL,
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
 
 const login = (email, password) => {
   let body = { email, password };
@@ -11,10 +19,19 @@ const register = (email, password) => {
 
   return client.post(endPoints.register, body);
 };
+const tokenRefresher = (token) => {
+
+  return client.get(endPoints.tokenRefresher, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  });
+};
 
 
 
 export {
   login,
-  register
+  register,
+  tokenRefresher
 };

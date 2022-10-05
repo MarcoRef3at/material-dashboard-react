@@ -50,6 +50,8 @@ import { Navigate } from "react-router-dom";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import { tokenRefresher } from 'api/auth';
+import jwt_decode from 'jwt-decode'
 
 const ProtectedRoute = ({ children }) => {
   let token = localStorage.getItem("TOKEN");
@@ -57,6 +59,21 @@ const ProtectedRoute = ({ children }) => {
   if (!token) {
     return <Navigate to="/authentication/sign-in" replace />;
   }
+  // else {
+  //   return tokenRefresher(token).then(res => {
+  //     const Token = res.data.token
+  //     localStorage.setItem("TOKEN", Token)
+  //     var decoded = jwt_decode(Token);
+  //     localStorage.setItem("cronLimit", decoded.cronLimit);
+  //     localStorage.setItem("cronUsed", decoded.cronUsed);
+  //     localStorage.setItem("isActive", decoded.isActive);
+  //     return children;
+  //   }).catch(e => {
+  //     console.log('invalid token error:', e)
+  //     return <Navigate to="/authentication/sign-in" replace />;
+  //   })
+    
+  // }
   return children;
 };
 
