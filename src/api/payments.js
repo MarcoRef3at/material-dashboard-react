@@ -5,8 +5,8 @@ const getPlans = async () => {
   return await api.get(endPoints.plans);
 };
 
-const stripeRedirect = (id) => {
-  return api.get(endPoints.stripe);
+const stripeRedirect = (planId, redirect) => {
+  return api.get(endPoints.stripe, { params: { plan: planId, redirect } });
 };
 
 

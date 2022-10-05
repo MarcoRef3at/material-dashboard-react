@@ -17,7 +17,8 @@ function Billing() {
   const [plans, setPlans] = useState([])
   const handleClick = async (id) => {
     try {
-      let redirection = await stripeRedirect(id)
+      const currentURL = window.location.href
+      let redirection = await stripeRedirect(id, currentURL)
       window.location.replace(redirection.data.redirect)
 
 
@@ -57,7 +58,7 @@ function Billing() {
         <MDBox mt={4.5}>
           <Grid container spacing={3}>
             {plans.map(plan => {
-              return <Grid item xs={12} md={6} lg={4}>
+              return <Grid item xs={12} md={6} lg={4} key={`${plan.uuid}`}>
                 <MDBox mb={3}>
                   <ReportsBarChart
                     type={plan.name}
@@ -69,7 +70,7 @@ function Billing() {
                     </>}
                     date="campaign sent 2 days ago"
                     headerTitle={`\$${plan.price}/mo`}
-                    handleClick={handleClick}
+                    handleClick={() => handleClick(plan.uuid)}
                     chart={reportsBarChartData}
                   />
 
