@@ -46,9 +46,19 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
+import { Navigate } from "react-router-dom";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+
+const ProtectedRoute = ({ children }) => {
+  let token = localStorage.getItem("TOKEN");
+  // TODO:tokenVerification
+  if (!token) {
+    return <Navigate to="/authentication/sign-in" replace />;
+  }
+  return children;
+};
 
 const routes = [
   {
@@ -57,7 +67,9 @@ const routes = [
     key: "schedulers",
     icon: <Icon fontSize="small">schedule</Icon>,
     route: "/schedulers",
-    component: <Schedulers />,
+    component: <ProtectedRoute>
+      <Schedulers />
+    </ProtectedRoute>
   },
   {
     type: "collapse",
@@ -65,7 +77,9 @@ const routes = [
     key: "monitor",
     icon: <Icon fontSize="small">dvr</Icon>,
     route: "/monitor",
-    component: <Monitor />,
+    component: <ProtectedRoute>
+      <Monitor />
+    </ProtectedRoute>
   },
   {
     type: "collapse",
@@ -73,7 +87,7 @@ const routes = [
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
-    component: <Billing />,
+    component: <ProtectedRoute><Billing /></ProtectedRoute>
     // component: <Dashboard />,
   },
   // {

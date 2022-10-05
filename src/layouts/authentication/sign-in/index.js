@@ -25,12 +25,33 @@ import BasicLayout from "layouts/authentication/components/BasicLayout";
 
 // Images
 import bgImage from "assets/images/bg-sign-in-basic.jpeg";
+import { login } from "api/auth"
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const navigate = useNavigate();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+  const handleLogin = async () => {
+    try {
+      let Login = await login(email, password)
+      const Token = Login.data.token
+      localStorage.setItem("TOKEN", Token);
+      var decoded = jwt_decode(Token);
+      localStorage.setItem("cronLimit", decoded.cronLimit);
+      localStorage.setItem("cronUsed", decoded.cronUsed);
+      localStorage.setItem("isActive", decoded.isActive);
+      navigate("/schedulers", { replace: true })
+    } catch (error) {
+      // TODO: handle errors
+      console.log('Login error:', error.response?.data || error)
+    }
 
+  }
   return (
     <BasicLayout image={bgImage}>
       <Card>
@@ -51,31 +72,15 @@ function Basic() {
           <MDTypography display="block" variant="button" color="white" my={1}>
             Sign in now !
           </MDTypography>
-          {/* <Grid container spacing={3} justifyContent="center" sx={{ mt: 1, mb: 2 }}>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <FacebookIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GitHubIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-            <Grid item xs={2}>
-              <MDTypography component={MuiLink} href="#" variant="body1" color="white">
-                <GoogleIcon color="inherit" />
-              </MDTypography>
-            </Grid>
-          </Grid> */}
+
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="email" label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput type="password" label="Password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -90,7 +95,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth>
+              <MDButton onClick={handleLogin} variant="gradient" color="info" fullWidth>
                 sign in
               </MDButton>
             </MDBox>
