@@ -53,25 +53,28 @@ import { Navigate, useNavigate } from "react-router-dom";
 import Icon from "@mui/material/Icon";
 import { tokenRefresher } from 'api/auth';
 import jwt_decode from 'jwt-decode'
+import { useEffect, useState } from 'react'
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, page }) => {
   const navigate = useNavigate();
   let token = localStorage.getItem("TOKEN");
-  tokenRefresher(token).then(res => {
-    const Token = res.data.token
-    localStorage.setItem("TOKEN", Token)
-    var decoded = jwt_decode(Token);
-    localStorage.setItem("cronLimit", decoded.cronLimit);
-    localStorage.setItem("cronUsed", decoded.cronUsed);
-    localStorage.setItem("isActive", decoded.isActive);
+  useEffect(() => {
+    tokenRefresher(token).then(res => {
+      const Token = res.data.token
+      localStorage.setItem("TOKEN", Token)
+      var decoded = jwt_decode(Token);
+      localStorage.setItem("cronLimit", decoded.cronLimit);
+      localStorage.setItem("cronUsed", decoded.cronUsed);
+      localStorage.setItem("isActive", decoded.isActive);
 
-  }).catch(e => {
-    if (e.response?.statusText === "Unauthorized")
+    }).catch(e => {
+      if (e.response?.statusText === "Unauthorized")
       navigate("/authentication/sign-in", { replace: true })
-  })
-  // if (!token) {
-  //   return <Navigate to="/authentication/sign-in" replace />;
-  // }
+    })
+    // if (!token) {
+      //   return <Navigate to="/authentication/sign-in" replace />;
+      // }
+  }, [page])
   return children;
 };
 
@@ -82,7 +85,7 @@ const routes = [
     key: "schedulers",
     icon: <Icon fontSize="small">schedule</Icon>,
     route: "/schedulers",
-    component: <ProtectedRoute>
+    component: <ProtectedRoute page='schedulers'>
       <Schedulers />
     </ProtectedRoute>
   },
@@ -92,7 +95,7 @@ const routes = [
     key: "monitor",
     icon: <Icon fontSize="small">dvr</Icon>,
     route: "/monitor",
-    component: <ProtectedRoute>
+    component: <ProtectedRoute page={'monitor'}>
       <Monitor />
     </ProtectedRoute>
   },
@@ -102,7 +105,7 @@ const routes = [
     key: "billing",
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/billing",
-    component: <ProtectedRoute><Billing /></ProtectedRoute>
+    component: <ProtectedRoute page={'billing'}><Billing /></ProtectedRoute>
     // component: <Dashboard />,
   },
   // {
