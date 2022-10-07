@@ -46,7 +46,8 @@ import Notifications from "layouts/notifications";
 import Profile from "layouts/profile";
 import SignIn from "layouts/authentication/sign-in";
 import SignUp from "layouts/authentication/sign-up";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+
 
 // @mui icons
 import Icon from "@mui/material/Icon";
@@ -54,25 +55,22 @@ import { tokenRefresher } from 'api/auth';
 import jwt_decode from 'jwt-decode'
 
 const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
   let token = localStorage.getItem("TOKEN");
-  // TODO:tokenVerification
-  if (!token) {
-    return <Navigate to="/authentication/sign-in" replace />;
-  }
-  // else {
-  //   return tokenRefresher(token).then(res => {
-  //     const Token = res.data.token
-  //     localStorage.setItem("TOKEN", Token)
-  //     var decoded = jwt_decode(Token);
-  //     localStorage.setItem("cronLimit", decoded.cronLimit);
-  //     localStorage.setItem("cronUsed", decoded.cronUsed);
-  //     localStorage.setItem("isActive", decoded.isActive);
-  //     return children;
-  //   }).catch(e => {
-  //     console.log('invalid token error:', e)
-  //     return <Navigate to="/authentication/sign-in" replace />;
-  //   })
-    
+  tokenRefresher(token).then(res => {
+    const Token = res.data.token
+    localStorage.setItem("TOKEN", Token)
+    var decoded = jwt_decode(Token);
+    localStorage.setItem("cronLimit", decoded.cronLimit);
+    localStorage.setItem("cronUsed", decoded.cronUsed);
+    localStorage.setItem("isActive", decoded.isActive);
+
+  }).catch(e => {
+    if (e.response?.statusText === "Unauthorized")
+      navigate("/authentication/sign-in", { replace: true })
+  })
+  // if (!token) {
+  //   return <Navigate to="/authentication/sign-in" replace />;
   // }
   return children;
 };
