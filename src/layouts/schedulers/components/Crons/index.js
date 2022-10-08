@@ -88,7 +88,7 @@ function Crons() {
     setCronUsed(localStorage.getItem('cronUsed'))
     getCrons().then(crons => {
       let data = []
-      console.log('crons:', crons.data)
+      localStorage.setItem('crons', JSON.stringify(crons.data.Items))
       crons.data.Items.map(cron => {
         let row =
         {

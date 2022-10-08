@@ -14,24 +14,40 @@ import DataTable from "examples/Tables/DataTable";
 
 // Data
 import logsTableData from "layouts/monitor/data/logsTableData";
-import MultipleSelectCheckmarks from 'examples/Items/SelectItem';
+import DropDown from 'examples/Items/SelectItem';
 import { getLogs } from 'api/logs';
 import logsTableColumns from './data/logsTableColumns';
 import { useEffect, useState } from 'react'
+import { getCrons } from 'api/crons'
 
 function Monitor() {
   const { columns } = logsTableColumns();
+  const [limit, setLimit] = useState(10)
+  const [count, setCount] = useState(0)
   const [rows, setRows] = useState([])
-  // const { columns: pColumns, rows: pRows } = projectsTableData();
+  let crons = localStorage.getItem('crons')
+  if (crons) crons = JSON.parse(crons)
+  const [options, setOptions] = useState(crons ? [...crons] : []);
+  const [selected, setSelected] = useState(crons ? crons[0] : null)
 
 
-  useEffect(() => {
-    logsTableData().then(data => {
-      console.log('useEffectdata:', data)
+  useEffect(async () => {
+    if (!crons) {
+      crons = ((await getCrons()).data.Items)
+      // console.log('crons:', crons)
+      setOptions([...crons])
+      setSelected(crons[0])
+      localStorage.setItem('crons', JSON.stringify(crons))
+    }
+
+  }, [])
+  useEffect(async () => {
+    if (selected)
+      logsTableData(selected.uuid, limit, setCount).then(data => {
+        console.log('data:', data)
       setRows(data)
     })
-    console.log('rows:', rows)
-  }, [])
+  }, [selected, limit])
 
   return (
     <DashboardLayout>
@@ -55,7 +71,7 @@ function Monitor() {
                     Logs Table
                   </MDTypography>
                   <MDBox>
-                    <MultipleSelectCheckmarks />
+                    <DropDown options={options} selected={selected} setSelected={setSelected} />
                   </MDBox>
                 </MDBox>
               </MDBox>
@@ -63,7 +79,10 @@ function Monitor() {
                 <DataTable
                   table={{ columns, rows }}
                   isSorted={true}
-                  entriesPerPage={2}
+                  entriesPerPage={limit}
+                  setLimit={setLimit}
+                  limit={limit}
+                  count={count}
                   showTotalEntries={true}
                   noEndBorder
                 />

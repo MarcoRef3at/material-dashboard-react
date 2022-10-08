@@ -5,7 +5,7 @@ import MDBadge from "components/MDBadge";
 
 import { getLogs } from 'api/logs';
 
-export default function data() {
+export default function data(cronUUID, limit, setCount) {
   const Author = ({ image, name, email }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       {/* <MDAvatar src={image} name={name} size="sm" /> */}
@@ -37,9 +37,9 @@ export default function data() {
     }
   }
 
-  return (getLogs().then(logs => {
+  return (getLogs(cronUUID, limit).then(logs => {
     let data = []
-    console.log('logs:', logs.data)
+    setCount(logs.data.Total)
     logs.data.Items.map(log => {
       let requestDate = ((new Date(log.requestTime)).toString()).substring(0, 15);
       let requestTime = ((new Date(log.requestTime)).toString()).substring(15, 24);
