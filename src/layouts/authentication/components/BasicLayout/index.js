@@ -13,10 +13,13 @@ import PageLayout from "examples/LayoutContainers/PageLayout";
 
 // Authentication pages components
 import Footer from "layouts/authentication/components/Footer";
+import MDAlert from 'components/MDAlert'
+import { useState } from 'react'
 
-function BasicLayout({ image, children }) {
+function BasicLayout({ image, errorMessage = null, children }) {
   return (
     <PageLayout>
+
       {/* <DefaultNavbar
         action={{
           type: "external",
@@ -41,6 +44,9 @@ function BasicLayout({ image, children }) {
           backgroundRepeat: "no-repeat",
         }}
       />
+      {errorMessage && <MDAlert color="error" dismissible>
+        {{ errorMessage }}
+      </MDAlert>}
       <MDBox px={1} width="100%" height="100vh" mx="auto">
         <Grid container spacing={1} justifyContent="center" alignItems="center" height="100%">
           <Grid item xs={11} sm={9} md={5} lg={4} xl={3}>

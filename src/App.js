@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, createContext, useContext } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -38,7 +38,9 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
-
+import MDAlert from 'components/MDAlert';
+const ErrorContext = createContext();
+export { ErrorContext }
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
   const {
@@ -131,9 +133,18 @@ export default function App() {
       </Icon>
     </MDBox>
   );
-
+  // const error = (useContext(ErrorContext)).error;
+  const [error, setError] = useState(null);
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
+      <ErrorContext.Provider value={[error, setError]}>
+        {error &&
+          <MDAlert color="error" dismissible style={{
+            zIndex: 10000
+          }}>
+            {error}
+          </MDAlert>
+        }
       <CssBaseline />
       {layout === "dashboard" && (
         <>
@@ -154,6 +165,7 @@ export default function App() {
         {getRoutes(routes)}
         <Route path="*" element={<Navigate to="/schedulers" />} />
       </Routes>
+      </ErrorContext.Provider>
     </ThemeProvider>
   );
 }

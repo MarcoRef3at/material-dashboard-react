@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -27,11 +27,16 @@ import MDBox from "components/MDBox";
 // Custom styles for the MDAlert
 import MDAlertRoot from "components/MDAlert/MDAlertRoot";
 import MDAlertCloseIcon from "components/MDAlert/MDAlertCloseIcon";
-
+import { ErrorContext } from 'App';
 function MDAlert({ color, dismissible, children, ...rest }) {
   const [alertStatus, setAlertStatus] = useState("mount");
+  const [error, setError] = useContext(ErrorContext);
 
-  const handleAlertStatus = () => setAlertStatus("fadeOut");
+
+  const handleAlertStatus = () => {
+    setAlertStatus("fadeOut")
+    setError(null)
+  };
 
   // The base template for the alert
   const alertTemplate = (mount = true) => (

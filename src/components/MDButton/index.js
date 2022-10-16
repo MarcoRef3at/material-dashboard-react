@@ -19,17 +19,21 @@ import { forwardRef } from "react";
 import PropTypes from "prop-types";
 
 // Custom styles for MDButton
+import Box from '@mui/material/Box';
 import MDButtonRoot from "components/MDButton/MDButtonRoot";
+import CircularProgress from '@mui/material/CircularProgress'
 
 // Material Dashboard 2 React contexts
 import { useMaterialUIController } from "context";
+import { useState } from 'react'
 
 const MDButton = forwardRef(
-  ({ color, variant, size, circular, iconOnly, children, ...rest }, ref) => {
+  ({ loading = false, color, variant, size, circular, iconOnly, children, ...rest }, ref) => {
     const [controller] = useMaterialUIController();
     const { darkMode } = controller;
-
     return (
+      <Box sx={{ m: 1, position: 'relative' }}>
+
       <MDButtonRoot
         {...rest}
         ref={ref}
@@ -37,9 +41,24 @@ const MDButton = forwardRef(
         variant={variant === "gradient" ? "contained" : variant}
         size={size}
         ownerState={{ color, variant, size, circular, iconOnly, darkMode }}
-      >
+        >
         {children}
       </MDButtonRoot>
+        {loading && (
+          <CircularProgress
+            size={24}
+            sx={{
+              color: "primary",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px',
+            }}
+          />
+        )}
+      </Box>
+
     );
   }
 );

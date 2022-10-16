@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 // react-router-dom components
 import { Link } from "react-router-dom";
@@ -28,16 +28,37 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 import { login } from "api/auth"
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import MDAlert from 'components/MDAlert'
+import { ErrorContext } from 'App';
+const validateEmail = (email) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 
 function Basic() {
+  const [error, setError] = useContext(ErrorContext);
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState(false)
+  const [passwordError, setPasswordError] = useState(false)
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const handleLogin = async () => {
+    setEmailError(false)
+    setPasswordError(false)
+    if (!validateEmail(email)) {
+      setEmailError(true)
+    } else if (password.length < 6) {
+      setPasswordError(true)
+    } else {
     try {
+      setLoading(true)
       let Login = await login(email, password)
       const Token = Login.data.token
       localStorage.setItem("TOKEN", Token);
@@ -46,14 +67,18 @@ function Basic() {
       localStorage.setItem("cronUsed", decoded.cronUsed);
       localStorage.setItem("isActive", decoded.isActive);
       navigate("/schedulers", { replace: true })
+      setError(null)
     } catch (error) {
-      // TODO: handle errors
+      setError(error.response?.data?.error)
       console.log('Login error:', error.response?.data || error)
+    } finally {
+      setLoading(false)
     }
-
+    }
   }
   return (
     <BasicLayout image={bgImage}>
+
       <Card>
         <MDBox
           variant="gradient"
@@ -78,9 +103,15 @@ function Basic() {
           <MDBox component="form" role="form">
             <MDBox mb={2}>
               <MDInput type="email" label="Email" fullWidth value={email} onChange={(e) => setEmail(e.target.value)} />
+              {emailError && <MDTypography variant="caption" fontWeight="regular" color="error" mt={1}>
+                Missing or Invalid email Format
+              </MDTypography>}
             </MDBox>
             <MDBox mb={2}>
               <MDInput type="password" label="Password" fullWidth value={password} onChange={(e) => setPassword(e.target.value)} />
+              {passwordError && <MDTypography variant="caption" fontWeight="regular" color="error" mt={1}>
+                Password length must be greater than 5 charachters
+              </MDTypography>}
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -95,7 +126,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton onClick={handleLogin} variant="gradient" color="info" fullWidth>
+              <MDButton onClick={handleLogin} loading={loading} variant="gradient" color="info" fullWidth>
                 sign in
               </MDButton>
             </MDBox>

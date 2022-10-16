@@ -1,5 +1,5 @@
 // react-router-dom components
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 
 // @mui material components
@@ -19,22 +19,29 @@ import CoverLayout from "layouts/authentication/components/CoverLayout";
 import bgImage from "assets/images/bg-sign-up-cover.jpeg";
 import { useNavigate } from "react-router-dom";
 import { register } from 'api/auth';
+import { ErrorContext } from 'App';
 
 function Cover() {
+  const [error, setError] = useContext(ErrorContext);
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
+      setLoading(true)
       let Register = await register(email, password)
       localStorage.setItem("TOKEN", Register.data.token);
       localStorage.setItem("cronLimit", 0);
       localStorage.setItem("cronUsed", 0);
       navigate("/schedulers", { replace: true })
+      setError(null)
     } catch (error) {
-      // TODO: handle errors
+      setError(error.response?.data?.error)
       console.log('Login error:', error.response?.data || error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -93,7 +100,7 @@ function Cover() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth onClick={handleRegister} >
+              <MDButton variant="gradient" color="info" fullWidth onClick={handleRegister} loading={loading}>
                 sign up
               </MDButton>
             </MDBox>

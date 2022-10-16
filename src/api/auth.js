@@ -2,7 +2,7 @@ import endPoints from "./endPoints";
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'http://localhost:4000',
   // baseURL: process.env.BASE_URL,
   headers: {
     "Content-Type": "application/json"
