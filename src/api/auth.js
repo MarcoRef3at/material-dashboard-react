@@ -2,11 +2,11 @@ import endPoints from "./endPoints";
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: "https://69dc-197-58-82-144.ngrok.io",
   // baseURL: process.env.BASE_URL,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 const login = (email, password) => {
@@ -20,11 +20,10 @@ const register = (email, password) => {
   return client.post(endPoints.register, body);
 };
 const tokenRefresher = (token) => {
-
-  return client.get(endPoints.tokenRefresher, {
+  return client.post(endPoints.tokenRefresher, {
     headers: {
       Authorization: `Bearer ${token}`,
-    }
+    },
   });
 };
 

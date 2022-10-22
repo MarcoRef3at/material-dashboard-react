@@ -10,12 +10,12 @@ const getToken = () => {
 };
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: "https://69dc-197-58-82-144.ngrok.io",
   // baseURL: process.env.BASE_URL,
   headers: {
     ...getToken(),
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 export default apiClient;
