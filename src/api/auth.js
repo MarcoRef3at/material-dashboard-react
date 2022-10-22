@@ -20,7 +20,7 @@ const register = (email, password) => {
   return client.post(endPoints.register, body);
 };
 const tokenRefresher = (token) => {
-  return client.post(endPoints.tokenRefresher, {
+  return client.post(endPoints.tokenRefresher, null, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
