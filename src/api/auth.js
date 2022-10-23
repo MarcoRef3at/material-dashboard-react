@@ -6,8 +6,8 @@ const client = axios.create({
   baseURL: 'https://tbn5qjckcb.execute-api.us-east-1.amazonaws.com',
   // baseURL: process.env.BASE_URL,
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 const login = (email, password) => {
@@ -21,11 +21,10 @@ const register = (email, password) => {
   return client.post(endPoints.register, body);
 };
 const tokenRefresher = (token) => {
-
-  return client.get(endPoints.tokenRefresher, {
+  return client.post(endPoints.tokenRefresher, null, {
     headers: {
       Authorization: `Bearer ${token}`,
-    }
+    },
   });
 };
 
