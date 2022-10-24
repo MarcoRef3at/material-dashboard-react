@@ -10,20 +10,26 @@ import reportsBarChartData from "layouts/billing/data/reportsBarChartData";
 import MDTypography from "components/MDTypography";
 import { stripeRedirect, getPlans } from 'api/payments';
 // react-router components
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { ErrorContext } from 'App';
+
 
 function Billing() {
-
+  const [error, setError] = useContext(ErrorContext);
+  const [loading, setLoading] = useState(false)
   const [plans, setPlans] = useState([])
   const handleClick = async (id) => {
+    setLoading(true)
     try {
       const currentURL = window.location.href
       let redirection = await stripeRedirect(id, currentURL)
       window.location.replace(redirection.data.redirect)
-
-
     } catch (error) {
+      setError(JSON.stringify(error.message))
       console.log('stripe error:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -33,7 +39,7 @@ function Billing() {
       Plans = Plans.sort((a, b) => (a.price) - (b.price));
       setPlans(Plans)
     }).catch(error => {
-      // TODO: handle any type of errors with pop notification
+      setError((error.message))
       console.log('getPlans error:', error.response.data || error)
     })
 
@@ -45,7 +51,6 @@ function Billing() {
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-
           <Grid item xs={12} md={12} lg={12}>
             <MDTypography variant="h2" fontWeight="medium" color="dark" mt={1} align="center">
               Affordable plans for every developer.
@@ -72,6 +77,7 @@ function Billing() {
                     headerTitle={`\$${plan.price}/mo`}
                     handleClick={() => handleClick(plan.uuid)}
                     chart={reportsBarChartData}
+                    loading={loading}
                   />
 
                 </MDBox>

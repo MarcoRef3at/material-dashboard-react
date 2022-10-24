@@ -26,7 +26,11 @@ function Monitor() {
   const [count, setCount] = useState(0)
   const [rows, setRows] = useState([])
   let crons = localStorage.getItem('crons')
-  if (crons) crons = JSON.parse(crons)
+  if (crons && crons != "undefined") {
+    crons = JSON.parse(crons)
+  } else {
+    crons = null
+  }
   const [options, setOptions] = useState(crons ? [...crons] : []);
   const [selected, setSelected] = useState(crons ? crons[0] : null)
 
@@ -34,7 +38,6 @@ function Monitor() {
   useEffect(async () => {
     if (!crons) {
       crons = ((await getCrons()).data.Items)
-      // console.log('crons:', crons)
       setOptions([...crons])
       setSelected(crons[0])
       localStorage.setItem('crons', JSON.stringify(crons))
