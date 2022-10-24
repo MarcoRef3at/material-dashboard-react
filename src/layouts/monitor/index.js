@@ -20,10 +20,13 @@ import logsTableColumns from './data/logsTableColumns';
 import { useEffect, useState } from 'react'
 import { getCrons } from 'api/crons'
 
+let pageKeys = [0];
+
 function Monitor() {
   const { columns } = logsTableColumns();
   const [limit, setLimit] = useState(10)
   const [count, setCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [rows, setRows] = useState([])
   let crons = localStorage.getItem('crons')
   if (crons && crons != "undefined") {
@@ -34,6 +37,17 @@ function Monitor() {
   const [options, setOptions] = useState(crons ? [...crons] : []);
   const [selected, setSelected] = useState(crons ? crons[0] : null)
 
+  const setPage = (pageNum) => {
+    console.log(pageNum, "num")
+    setCurrentPage(pageNum)
+    logsTableData({ cronUUID: selected.uuid, limit, pageAfterUUID: pageKeys[pageNum-1].cronUUID, pageAfterTime: pageKeys[pageNum-1].requestTime }, setCount).then(data => {
+      setRows(data.rows)
+      if (pageKeys[pageNum] == undefined){
+        pageKeys.push(data.pageKey)
+      }
+      console.log("key", pageKeys)
+    })
+  }
 
   useEffect(async () => {
     if (!crons) {
@@ -46,10 +60,12 @@ function Monitor() {
   }, [])
   useEffect(async () => {
     if (selected)
-      logsTableData(selected.uuid, limit, setCount).then(data => {
+      logsTableData({ cronUUID: selected.uuid, limit }, setCount).then(data => {
         console.log('data:', data)
-      setRows(data)
-    })
+        setRows(data.rows)
+        if (pageKeys[1] == undefined)
+          pageKeys.push(data.pageKey)
+      })
   }, [selected, limit])
 
   return (
@@ -84,6 +100,9 @@ function Monitor() {
                   isSorted={true}
                   entriesPerPage={limit}
                   setLimit={setLimit}
+                  setPage={setPage}
+                  showPageNum={pageKeys.length}
+                  currentPage={currentPage}
                   limit={limit}
                   count={count}
                   showTotalEntries={true}
