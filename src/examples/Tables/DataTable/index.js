@@ -42,6 +42,9 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 function DataTable({
   entriesPerPage,
   setLimit,
+  setPage,
+  showPageNum,
+  currentPage,
   limit,
   canSearch,
   showTotalEntries,
@@ -91,21 +94,31 @@ function DataTable({
     setGlobalFilter,
     state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
+  let totalPage = Array.from(Array(1).keys())
+  showPageNum = Array.from(Array(showPageNum).keys())
   // pageOptions = Array.from(Array(Math.ceil(count / limit)).keys())
   // Set the default value for the entries per page when component mounts
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
+  
+  canNextPage = false;
+  canPreviousPage = false;
+  if (Math.ceil(count / limit) >= 2)
+    canNextPage = true;
+  if (currentPage > 1) {
+    canPreviousPage = true;
+  }
 
   // Set the entries per page value based on the select value
   const setEntriesPerPage = (value) => { setPageSize(value); setLimit(value) }
-
+  
   // Render the paginations
-  const renderPagination = pageOptions.map((option) => {
+  const renderPagination = showPageNum.map((option) => {
     return (
     <MDPagination
       item
       key={option}
-      onClick={() => gotoPage(Number(option))}
-      active={pageIndex === option}
+      onClick={() => setPage(Number(option+1))}
+      active={currentPage === option+1}
     >
       {option + 1}
     </MDPagination>
@@ -158,7 +171,7 @@ function DataTable({
   } else {
     entriesEnd = pageSize * (pageIndex + 1);
   }
-
+  console.log(pageOptions, '1');
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
       {entriesPerPage || canSearch ? (
@@ -254,11 +267,11 @@ function DataTable({
             color={pagination.color ? pagination.color : "info"}
           >
             {canPreviousPage && (
-              <MDPagination item onClick={() => previousPage()}>
+              <MDPagination item onClick={() => setPage(currentPage-1)}>
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            {renderPagination.length > 6 ? (
+            {renderPagination.length < 0 ? (
               <MDBox width="5rem" mx={1}>
                 <MDInput
                   inputProps={{ type: "number", min: 1, max: customizedPageOptions.length }}
@@ -270,7 +283,7 @@ function DataTable({
               renderPagination
             )}
             {canNextPage && (
-              <MDPagination item onClick={() => nextPage()}>
+              <MDPagination item onClick={() => setPage(currentPage+1)}>
                 <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
               </MDPagination>
             )}

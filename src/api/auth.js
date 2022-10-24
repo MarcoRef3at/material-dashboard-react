@@ -2,8 +2,8 @@ import endPoints from "./endPoints";
 import axios from 'axios'
 
 const client = axios.create({
-  // baseURL: 'https://597b-197-58-118-8.ngrok.io',
-  baseURL: 'https://tbn5qjckcb.execute-api.us-east-1.amazonaws.com',
+  baseURL: 'https://81be-197-58-82-144.ngrok.io',
+  // baseURL: 'https://tbn5qjckcb.execute-api.us-east-1.amazonaws.com',
   // baseURL: process.env.BASE_URL,
   headers: {
     "Content-Type": "application/json",

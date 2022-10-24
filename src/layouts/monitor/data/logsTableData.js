@@ -5,7 +5,7 @@ import MDBadge from "components/MDBadge";
 
 import { getLogs } from 'api/logs';
 
-export default function data(cronUUID, limit, setCount) {
+export default function data(pageKey, setCount, pageNum = 1) {
   const Author = ({ image, name, email }) => (
     <MDBox display="flex" alignItems="center" lineHeight={1}>
       {/* <MDAvatar src={image} name={name} size="sm" /> */}
@@ -37,7 +37,7 @@ export default function data(cronUUID, limit, setCount) {
     }
   }
 
-  return (getLogs(cronUUID, limit).then(logs => {
+  return (getLogs(pageKey).then(logs => {
     let data = []
     setCount(logs.data.Total)
     logs.data.Items.map(log => {
@@ -74,6 +74,6 @@ export default function data(cronUUID, limit, setCount) {
       }
       data.push(row)
     })
-    return (data)
+    return ({ rows: data, pageKey: logs.data.LastEvaluatedKey })
   }));
 }

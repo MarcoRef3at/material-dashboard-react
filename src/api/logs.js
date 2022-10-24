@@ -1,8 +1,8 @@
 import api from "./index";
 import endPoints from "./endPoints";
 
-const getLogs = (cronUUID, limit) => {
-  return api.post(endPoints.logs, null, { params: { cronUUID, limit } });
+const getLogs = (pageKey) => {
+  return api.post(endPoints.logs, null, { params: pageKey});
 };
 
 
