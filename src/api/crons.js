@@ -2,7 +2,7 @@ import axios from "./index";
 import endPoints from "./endPoints";
 
 const getCrons = () => {
-  return axios.post(endPoints.crons);
+  return axios.get(endPoints.crons);
 };
 
 const deleteCron = (uuid) => {
