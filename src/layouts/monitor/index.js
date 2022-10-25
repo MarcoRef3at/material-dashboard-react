@@ -39,6 +39,8 @@ function Monitor() {
 
   const setPage = (pageNum) => {
     setCurrentPage(pageNum)
+    if(pageKeys[pageNum-1] == undefined)
+      return
     logsTableData({ cronUUID: selected.uuid, limit, pageAfterUUID: pageKeys[pageNum-1].cronUUID, pageAfterTime: pageKeys[pageNum-1].requestTime }, setCount).then(data => {
       if (pageKeys[pageNum] == undefined && pageNum <= count/limit){
         pageKeys.push(data.pageKey)
