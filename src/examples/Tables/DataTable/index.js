@@ -94,15 +94,18 @@ function DataTable({
     setGlobalFilter,
     state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
-  let totalPage = Array.from(Array(1).keys())
-  showPageNum = Array.from(Array(showPageNum).keys())
+  if(showPageNum <= Math.ceil(count/limit)) {
+    showPageNum = Array.from(Array(showPageNum).keys())
+  } else {
+    showPageNum = Array.from(Array(Math.ceil(count / limit)).keys())
+  }
   // pageOptions = Array.from(Array(Math.ceil(count / limit)).keys())
   // Set the default value for the entries per page when component mounts
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue]);
   
   canNextPage = false;
   canPreviousPage = false;
-  if (Math.ceil(count / limit) >= 2)
+  if (Math.ceil(count / limit) > 1 && currentPage < Math.ceil(count / limit))
     canNextPage = true;
   if (currentPage > 1) {
     canPreviousPage = true;
