@@ -42,6 +42,7 @@ function ReportsBarChart({ color,
   description,
   date,
   chart,
+  loading,
   headerTitle,
   badgeColor = "success" }) {
   const { data, options } = configs(chart.labels || [], chart.datasets || {});
@@ -79,7 +80,7 @@ function ReportsBarChart({ color,
           </MDTypography>
           <Divider />
           <MDBox display="flex" alignItems="center" align="center">
-            <MDButton variant="gradient" color={color} align="center" onClick={() => handleClick(1)}>
+            <MDButton variant="gradient" color={color} align="center" loading={loading} onClick={() => handleClick(1)}>
               GET STARTED
             </MDButton>
           </MDBox>

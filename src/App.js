@@ -133,7 +133,6 @@ export default function App() {
       </Icon>
     </MDBox>
   );
-  // const error = (useContext(ErrorContext)).error;
   const [error, setError] = useState(null);
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
