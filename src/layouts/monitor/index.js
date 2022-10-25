@@ -44,6 +44,7 @@ function Monitor() {
         pageKeys.push(data.pageKey)
       }
       setRows(data.rows)
+      console.log('pagekey:', pageKeys)
     })
   }
 
@@ -59,9 +60,11 @@ function Monitor() {
   useEffect(async () => {
     if (selected)
       logsTableData({ cronUUID: selected.uuid, limit }, setCount).then(data => {
-        setRows(data.rows)
-        if (pageKeys[1] == undefined)
+        if (pageKeys[1] == undefined) {
           pageKeys.push(data.pageKey)
+          console.log('start:', pageKeys)
+        }
+        setRows(data.rows)
       })
   }, [selected, limit])
 
@@ -98,7 +101,7 @@ function Monitor() {
                   entriesPerPage={limit}
                   setLimit={setLimit}
                   setPage={setPage}
-                  showPageNum={pageKeys.length}
+                  showPageNum={pageKeys.length-1}
                   currentPage={currentPage}
                   limit={limit}
                   count={count}
