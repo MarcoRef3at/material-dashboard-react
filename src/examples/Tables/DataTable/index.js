@@ -45,14 +45,14 @@ function DataTable({
   setPage,
   showPageNum,
   currentPage,
-  limit,
+  limit = 10,
   canSearch,
   showTotalEntries,
   table,
   pagination,
   isSorted,
   noEndBorder,
-  count
+  count = 0
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -94,6 +94,7 @@ function DataTable({
     setGlobalFilter,
     state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
+  
   if(showPageNum <= Math.ceil(count/limit)) {
     showPageNum = Array.from(Array(showPageNum).keys())
   } else {
@@ -174,7 +175,7 @@ function DataTable({
   } else {
     entriesEnd = pageSize * (pageIndex + 1);
   }
-  console.log(pageOptions, '1');
+  
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
       {entriesPerPage || canSearch ? (

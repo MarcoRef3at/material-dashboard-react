@@ -38,14 +38,12 @@ function Monitor() {
   const [selected, setSelected] = useState(crons ? crons[0] : null)
 
   const setPage = (pageNum) => {
-    console.log(pageNum, "num")
     setCurrentPage(pageNum)
     logsTableData({ cronUUID: selected.uuid, limit, pageAfterUUID: pageKeys[pageNum-1].cronUUID, pageAfterTime: pageKeys[pageNum-1].requestTime }, setCount).then(data => {
       if (pageKeys[pageNum] == undefined && pageNum <= count/limit){
         pageKeys.push(data.pageKey)
       }
       setRows(data.rows)
-      console.log("key", pageKeys)
     })
   }
 
@@ -61,7 +59,6 @@ function Monitor() {
   useEffect(async () => {
     if (selected)
       logsTableData({ cronUUID: selected.uuid, limit }, setCount).then(data => {
-        console.log('data:', data)
         setRows(data.rows)
         if (pageKeys[1] == undefined)
           pageKeys.push(data.pageKey)
