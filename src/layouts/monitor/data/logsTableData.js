@@ -75,5 +75,8 @@ export default function data(pageKey, setCount, pageNum = 1) {
       data.push(row)
     })
     return ({ rows: data, pageKey: logs.data.LastEvaluatedKey })
-  }));
+  }).catch(err => {
+    alert(err)
+  })
+  );
 }
