@@ -38,9 +38,9 @@ function Monitor() {
   const [selected, setSelected] = useState(crons ? crons[0] : null)
 
   const setPage = (pageNum) => {
-    setCurrentPage(pageNum)
     if(pageKeys[pageNum-1] == undefined)
       return
+    setCurrentPage(pageNum)
     logsTableData({ cronUUID: selected.uuid, limit, pageAfterUUID: pageKeys[pageNum-1].cronUUID, pageAfterTime: pageKeys[pageNum-1].requestTime }, setCount).then(data => {
       if (pageKeys[pageNum] == undefined && pageNum <= count/limit){
         pageKeys.push(data.pageKey)
