@@ -18,7 +18,6 @@ function Schedulers() {
             <Grid item xs={12} md={12} lg={12}>
               <Crons />
             </Grid>
-
           </Grid>
         </MDBox>
       </MDBox>

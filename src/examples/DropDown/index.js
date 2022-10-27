@@ -6,13 +6,14 @@ import MenuItem from '@mui/material/MenuItem'
 
 
 
-export default function MDDropDown({ values, label, value, onChange }) {
+export default function MDDropDown({ values, label, value, onChange, sx }) {
     return (
-        <FormControl >
+        <FormControl sx={sx} >
             <InputLabel id="demo-simple-select-label">{label}</InputLabel>
             <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
+                sx={{ height: '100%' }}
                 value={value || values[0].toLowerCase()}
                 label={label}
                 onChange={onChange}

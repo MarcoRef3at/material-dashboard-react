@@ -27,6 +27,26 @@ export default function AddEditModal({
     setBody,
     headers,
     setHeaders }) {
+        const [bodyError, setBodyError] = useState(false)
+        const [headerError, setHeaderError] = useState(false)
+        const checkBodyText = (data) => {
+            setBody(data)
+            try {
+                let a = JSON.parse(data)
+                setBodyError(false)
+            } catch(e) {
+                setBodyError(true)
+            }
+        }
+        const checkHeaderText = (data) => {
+            setHeaders(data)
+            try {
+                let a = JSON.parse(data)
+                setHeaderError(false)
+            } catch(e) {
+                setHeaderError(true)
+            }
+        }
     return (
         <MDBox pt={4} pb={3} px={3}>
             <MDTypography
@@ -46,10 +66,10 @@ export default function AddEditModal({
                     />
                 </MDBox>
                 <MDBox mb={2} sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <MDDropDown values={methods} label="Methods" value={requestType}
+                    <MDDropDown values={methods} label="Methods" value={requestType} sx={{flex: 1}}
                         onChange={(e) => setRequestType(e.target.value)}
                     />
-                    <MDInput label="Target HTTP URL" sx={{ flexGrow: 1 }}
+                    <MDInput label="Target HTTP URL" sx={{ flexGrow: 1 , flex: '2'}}
                         value={api}
                         onChange={(e) => setApi(e.target.value)} />
                 </MDBox>
@@ -61,21 +81,25 @@ export default function AddEditModal({
                         onChange={(e) => e.target.value ? e.target.value > 100 ? setCount(100) : setCount(e.target.value) : setCount(1)}
                         InputProps={{ inputProps: { min: 1, max: 100 } }}
                     />
-                    <MDDropDown values={intervals} label="Interval" value={interval}
+                    <MDDropDown values={intervals} label="Interval" value={interval} sx={{flex: 1}}
                         onChange={(e) => setInterval(e.target.value)} />
                 </MDBox>
 
-                <MDBox mt={4} mb={1} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <MDBox mt={4} mb={1} sx={{ display: 'flex', flexDirection: 'column' }}>
                     <TextField
+                        error={bodyError}
                         id="filled-multiline-static"
                         label="Body"
+                        sx={{ marginBottom: '20px' }}
                         multiline
                         rows={4}
                         // defaultValue="Default Value"
                         variant="filled"
                         value={body}
-                        onChange={(e) => setBody(e.target.value)} />
+                        helperText={bodyError ? "This is not JSON type" : ""}
+                        onChange={(e) => checkBodyText(e.target.value)} />
                     <TextField
+                        error={headerError}
                         id="filled-multiline-static"
                         label="Headers"
                         multiline
@@ -83,7 +107,8 @@ export default function AddEditModal({
                         // defaultValue="Default Value"
                         variant="filled"
                         value={headers}
-                        onChange={(e) => setHeaders(e.target.value)} />
+                        helperText={headerError ? "This is not JSON type" : ""}
+                        onChange={(e) => checkHeaderText(e.target.value)} />
 
                 </MDBox>
 

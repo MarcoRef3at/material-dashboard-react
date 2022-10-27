@@ -6,6 +6,11 @@ import ReportsBarChart from "examples/Charts/BarCharts/ReportsBarChart";
 // Data
 import reportsBarChartData from "layouts/billing/data/reportsBarChartData";
 
+//Circle Progress Bar
+import Box from '@mui/material/Box';
+import Fade from '@mui/material/Fade';
+import CircularProgress from '@mui/material/CircularProgress';
+
 // billing components
 import MDTypography from "components/MDTypography";
 import { stripeRedirect, getPlans } from 'api/payments';
@@ -19,6 +24,7 @@ function Billing() {
   const [error, setError] = useContext(ErrorContext);
   const [loading, setLoading] = useState(false)
   const [plans, setPlans] = useState([])
+  const [progressBar, setProgressBar] = useState(true)
   const handleClick = async (id) => {
     setLoading(true)
     try {
@@ -34,7 +40,9 @@ function Billing() {
   }
 
   useEffect(() => {
+    setProgressBar(true)
     getPlans().then(plans => {
+      setProgressBar(false)
       let Plans = (plans.data.Items)
       Plans = Plans.sort((a, b) => (a.price) - (b.price));
       setPlans(Plans)
@@ -60,7 +68,14 @@ function Billing() {
             </MDTypography>
           </Grid>
         </Grid>
-        <MDBox mt={4.5}>
+        <MDBox mt={4.5} sx={{ position: 'relative' }}>
+          <Box sx={{ position: "absolute", display: "flex", alignItems: "center", width: "100%", height: "100px", justifyContent: "center" }}>
+            <Fade
+              in={progressBar}
+            >
+              <CircularProgress color="info" />
+            </Fade>
+          </Box>
           <Grid container spacing={3}>
             {plans.map(plan => {
               return <Grid item xs={12} md={6} lg={4} key={`${plan.uuid}`}>
