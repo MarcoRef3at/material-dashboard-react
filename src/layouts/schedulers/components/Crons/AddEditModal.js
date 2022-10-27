@@ -96,7 +96,7 @@ export default function AddEditModal({
                         // defaultValue="Default Value"
                         variant="filled"
                         value={body}
-                        helperText={bodyError ? "This is not JSON type" : ""}
+                        helperText={bodyError ? "This is not JSON format" : ""}
                         onChange={(e) => checkBodyText(e.target.value)} />
                     <TextField
                         error={headerError}
@@ -107,7 +107,7 @@ export default function AddEditModal({
                         // defaultValue="Default Value"
                         variant="filled"
                         value={headers}
-                        helperText={headerError ? "This is not JSON type" : ""}
+                        helperText={headerError ? "This is not JSON format" : ""}
                         onChange={(e) => checkHeaderText(e.target.value)} />
 
                 </MDBox>
