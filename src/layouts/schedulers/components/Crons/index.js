@@ -13,6 +13,11 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React examples
 import DataTable from "examples/Tables/DataTable";
 
+//Material progress bar
+import Box from '@mui/material/Box';
+import Fade from '@mui/material/Fade';
+import LinearProgress from '@mui/material/LinearProgress';
+
 // Data
 import MDButton from '../../../../components/MDButton/index'
 import schedulersTableData from "layouts/tables/data/schedulersTableData";
@@ -44,6 +49,8 @@ function Crons() {
   const [error, setError] = useState("")
   const [cronLimit, setCronLimit] = useState(0)
   const [cronUsed, setCronUsed] = useState(0)
+  const [progressBar, setProgressBar] = useState(false)
+
   const openErrorSB = (e) => {
     setError(e)
     setErrorSB(true)
@@ -114,6 +121,7 @@ function Crons() {
         data.push(row)
       })
       setRows(data)
+      setProgressBar(false)
     })
   }
 
@@ -199,6 +207,7 @@ function Crons() {
 
 
   useEffect(() => {
+    setProgressBar(true)
     setTable()
   }, [])
 
@@ -254,6 +263,13 @@ function Crons() {
         </MDBox>
       </MDBox>
       <MDBox>
+        <Box sx={{ width: '100%' }}>
+          <Fade
+            in={progressBar}
+          >
+            <LinearProgress color="info" sx={{ overflow: 'hidden' }} />
+          </Fade>
+        </Box>
         <DataTable
           table={{ columns, rows }}
           showTotalEntries={false}
