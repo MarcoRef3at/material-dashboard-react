@@ -60,6 +60,7 @@ const ProtectedRoute = ({ children, page }) => {
   let token = localStorage.getItem("TOKEN");
   useEffect(() => {
     if (!token) {
+      localStorage.clear()
       navigate("/authentication/sign-in", { replace: true })
     } else {
     tokenRefresher(token).then(res => {
@@ -71,7 +72,10 @@ const ProtectedRoute = ({ children, page }) => {
       localStorage.setItem("isActive", decoded.isActive);
     }).catch(e => {
       if (e.response?.statusText === "Unauthorized")
-      navigate("/authentication/sign-in", { replace: true })
+      {
+        localStorage.clear()
+        navigate("/authentication/sign-in", { replace: true })
+      }
     })
     }
   }, [page])
