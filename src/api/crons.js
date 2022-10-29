@@ -2,7 +2,12 @@ import axios from "./index";
 import endPoints from "./endPoints";
 
 const getCrons = () => {
-  return axios.get(endPoints.crons);
+  let userToken = localStorage.getItem("TOKEN");
+  return axios.get(endPoints.crons, {
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+    }
+  });
 };
 
 const deleteCron = (uuid) => {
